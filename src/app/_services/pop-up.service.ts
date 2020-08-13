@@ -14,6 +14,7 @@ export class PopUpService {
     return `` +
       `<div>Title: ${ feature.properties.name }</div>` +
       `<div>Dates: ${ formatDates}</div>` +
-      `<div>Place: ${ feature.properties.town }</div>`
+      `<div>Place: ${ feature.properties.town }</div>` 
+      //`<div>Event ID: ${ feature.properties.raw_data }</div>`
   }
 }
