@@ -9,7 +9,7 @@ import 'leaflet.markercluster';
 })
 export class MarkerService {
   // add &maxFeatures=50 to URL to limit number of features
-  events: string = 'http://human.zgis.at/geoserver/music_map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=music_map:salzburg_info_api&outputFormat=application%2Fjson';
+  events: string = 'http://human.zgis.at/geoserver/music_map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=music_map:salzburg_info_api&outputFormat=application%2Fjson&maxFeatures=50';
 
   constructor(private http: HttpClient,
           private popupService: PopUpService) {  }

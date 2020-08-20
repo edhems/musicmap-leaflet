@@ -54,12 +54,46 @@ export class MapComponent implements AfterViewInit {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }
     );
+
+    const BasemapAT_grau = L.tileLayer(
+      'https://maps{s}.wien.gv.at/basemap/bmapgrau/{type}/google3857/{z}/{y}/{x}.{format}',
+      {
+        maxZoom: 19,
+        attribution:
+          'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
+        subdomains: ['', '1', '2', '3', '4'],
+        type: 'normal',
+        format: 'png',
+        bounds: [
+          [46.35877, 8.782379],
+          [49.037872, 17.189532],
+        ],
+      }
+    );
+
+    const BasemapAT_orthofoto = L.tileLayer(
+      'https://maps{s}.wien.gv.at/basemap/bmaporthofoto30cm/{type}/google3857/{z}/{y}/{x}.{format}',
+      {
+        maxZoom: 20,
+        attribution:
+          'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
+        subdomains: ['', '1', '2', '3', '4'],
+        type: 'normal',
+        format: 'jpeg',
+        bounds: [
+          [46.35877, 8.782379],
+          [49.037872, 17.189532],
+        ],
+      }
+    );
     var baseMaps = {
       'Carto Light': cartoTiles,
       'Open Street Map': osm,
+      'Basemap.at': BasemapAT_grau,
+      Orthophoto: BasemapAT_orthofoto,
     };
-    L.control.layers(baseMaps).addTo(this.map);
 
+    L.control.layers(baseMaps).addTo(this.map);
     cartoTiles.addTo(this.map);
   }
 }
