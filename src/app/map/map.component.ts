@@ -30,6 +30,7 @@ export class MapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initMap();
     this.markerService.makeEventMarkers(this.map);
+    this.markerService.makeOrganizerMarkers(this.map);
   }
   private initMap(): void {
     this.map = L.map('map', {
@@ -93,7 +94,13 @@ export class MapComponent implements AfterViewInit {
       Orthophoto: BasemapAT_orthofoto,
     };
 
-    L.control.layers(baseMaps).addTo(this.map);
+    var overlays = {
+      'Organizers' : this.markerService.organizers_grp,
+      'Events' : this.markerService.events_grp
+    }
+
+    L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
+    //this.markerService.events_grp.addTo(this.map);
   }
 }

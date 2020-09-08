@@ -12,9 +12,12 @@ export class MarkerService {
   // add &maxFeatures=50 to URL to limit number of features
   events: string =
     'http://human.zgis.at/geoserver/music_map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=music_map:salzburg_info_api&outputFormat=application%2Fjson';
+  organizers: string =
+    'http://human.zgis.at/geoserver/music_map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=music_map:musicmap_organizers&outputFormat=application%2Fjson';
 
   constructor(private http: HttpClient, private popupService: PopUpService) {}
-
+  organizers_grp = L.layerGroup();
+  events_grp = L.layerGroup();
   makeEventMarkers(map: L.map): void {
     var markerCount = 0;
     var date;
@@ -41,8 +44,22 @@ export class MarkerService {
           markerCount++;
         }
       }
-      console.log('Created ' + markerCount + ' markers');
+      console.log('Created ' + markerCount + ' event markers');
     });
+    // add event clusters/markers to map
     map.addLayer(cluster);
+    
+  }
+  makeOrganizerMarkers(map: L.map): void {
+    this.http.get(this.organizers).subscribe((org: any) => {
+      console.log('creating organizer markers');
+      for (const o of org.features) {
+        const lat = o.geometry.coordinates[0];
+        const lon = o.geometry.coordinates[1];
+        const marker = L.marker([lon, lat]).addTo(map);
+        marker.bindPopup(this.popupService.makeOrganizerPopup(o));
+        this.organizers_grp.addLayer(marker);
+      }
+    });
   }
 }
