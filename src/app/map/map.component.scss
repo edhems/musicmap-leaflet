@@ -1,21 +1,17 @@
 .map-container {
-    position: absolute;
-    top: 7%;
-    left: 0;
-    right: 0;
-    bottom: 7%;
-    margin: 10;
-    
-    
-    
-    
-  }
-  
-  .map-frame {
-    border: 2px solid rgb(104, 104, 104);
-    height: 100%;
-  }
-  
-  #map {
-    height: 100%;
-  }
+  position: absolute;
+  top: 6%;
+  left: 0;
+  right: 0;
+  bottom: 7%;
+  margin: 10;
+}
+
+.map-frame {
+  border: 2px solid rgb(104, 104, 104);
+  height: 100%;
+}
+
+#map {
+  height: 100%;
+}

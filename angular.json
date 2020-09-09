@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "musicmap-leaflet": {
+    "musicmap_v2": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/musicmap-leaflet",
+            "outputPath": "dist/musicmap_v2",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -30,16 +30,26 @@
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images/",
                 "output": "./assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
               }
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "node_modules/leaflet/dist/leaflet.css",
+              "./node_modules/leaflet/dist/leaflet.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+              "node_modules/leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css",
               "src/styles.scss"
+             
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/leaflet-extra-markers/dist/js/leaflet.extra-markers.js"
+              
+            ]
           },
           "configurations": {
             "production": {
@@ -75,18 +85,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "musicmap-leaflet:build"
+            "browserTarget": "musicmap_v2:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "musicmap-leaflet:build:production"
+              "browserTarget": "musicmap_v2:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "musicmap-leaflet:build"
+            "browserTarget": "musicmap_v2:build"
           }
         },
         "test": {
@@ -124,16 +134,40 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "musicmap-leaflet:serve"
+            "devServerTarget": "musicmap_v2:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "musicmap-leaflet:serve:production"
+              "devServerTarget": "musicmap_v2:serve:production"
+            }
+          }
+        },
+        "ionic-cordova-serve": {
+          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "options": {
+            "cordovaBuildTarget": "musicmap_v2:ionic-cordova-build",
+            "devServerTarget": "musicmap_v2:serve"
+          },
+          "configurations": {
+            "production": {
+              "cordovaBuildTarget": "musicmap_v2:ionic-cordova-build:production",
+              "devServerTarget": "musicmap_v2:serve:production"
+            }
+          }
+        },
+        "ionic-cordova-build": {
+          "builder": "@ionic/angular-toolkit:cordova-build",
+          "options": {
+            "browserTarget": "musicmap_v2:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "musicmap_v2:build:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "musicmap-leaflet"
+  "defaultProject": "musicmap_v2"
 }

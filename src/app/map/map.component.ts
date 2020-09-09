@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, NgModule } from '@angular/core';
 import * as L from 'leaflet';
 import { MarkerService } from '../_services/marker.service';
 
@@ -16,7 +16,7 @@ const iconDefault = L.icon({
   tooltipAnchor: [16, -28],
   shadowSize: [41, 41],
 });
-L.Marker.prototype.options.icon = iconDefault;
+//L.Marker.prototype.options.icon = iconDefault;
 
 @Component({
   selector: 'app-map',
@@ -101,6 +101,6 @@ export class MapComponent implements AfterViewInit {
 
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
-    //this.markerService.events_grp.addTo(this.map);
+    this.markerService.events_grp.addTo(this.map);
   }
 }

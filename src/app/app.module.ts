@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { MarkerService } from './_services/marker.service';
@@ -15,6 +15,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { FooterComponent } from './footer/footer.component';
+import { IonicModule } from '@ionic/angular';
 
 
 
@@ -36,7 +37,9 @@ import { FooterComponent } from './footer/footer.component';
     MatSidenavModule,
     MatListModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    LeafletModule,
+    
   ],
 
   exports: [

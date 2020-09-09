@@ -21,10 +21,12 @@ export class PopUpService {
     //console.log(imgLink);
     return (
       `` +
-      `<div><img src= ${imgLink}; alt="no image" style='height: 100%; width: 100%; object-fit: contain'><div>` +
+      `<div><img class="popupimg" src= ${imgLink}; alt="no image" ><div>` +
       `<div>Title: ${feature.properties.name}</div>` +
-      `<div>Dates Raw: ${feature.properties.dates}</div>` +
-      `<div>Start: ${eventDate.from} End: ${eventDate.to} Time: ${eventDate.timeBegin} </div>` +
+      //`<div>Dates Raw: ${feature.properties.dates}</div>` +
+      `<div>From: ${eventDate.from}</div>` +
+      `<div>To: ${eventDate.to}</div>` +
+      `<div>Time: ${eventDate.timeBegin}</div>` +
       `<div>Place: ${feature.properties.town}</div>`
     );
     //`<div>Event ID: ${ feature.properties.raw_data }</div>`
@@ -38,6 +40,6 @@ export class PopUpService {
       `<div>Tel: ${feature.properties.tel}</div>` +
       `<div>Email: ${feature.properties.email}</div>`
     );
-
   }
 }
+//style='height: 100%; width: 100%; object-fit: contain'
