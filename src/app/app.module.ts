@@ -15,8 +15,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { IonicModule } from '@ionic/angular';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { AboutComponent } from './about/about.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 
@@ -26,7 +28,9 @@ import { IonicModule } from '@ionic/angular';
     AppComponent,
     MapComponent,
     ToolbarComponent,
-    FooterComponent,  
+    FooterComponent,
+    AboutComponent,
+    PageNotFoundComponent,  
   ],
   imports: [
     BrowserModule,
@@ -39,6 +43,8 @@ import { IonicModule } from '@ionic/angular';
     MatButtonModule,
     MatIconModule,
     LeafletModule,
+    MatProgressBarModule,
+    MatCardModule
     
   ],
 

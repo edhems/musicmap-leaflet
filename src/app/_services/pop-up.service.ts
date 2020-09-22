@@ -23,7 +23,7 @@ export class PopUpService {
       `` +
       `<div><img class="popupimg" src= ${imgLink}; alt="no image" ><div>` +
       `<div>Title: ${feature.properties.name}</div>` +
-      //`<div>Dates Raw: ${feature.properties.dates}</div>` +
+      `<div>Dates Raw: ${feature.properties.dates}</div>` +
       `<div>From: ${eventDate.from}</div>` +
       `<div>To: ${eventDate.to}</div>` +
       `<div>Time: ${eventDate.timeBegin}</div>` +

@@ -21,13 +21,15 @@ export class MarkerService {
   constructor(private http: HttpClient, private popupService: PopUpService) {}
   organizers_grp = L.layerGroup();
   events_grp = L.layerGroup();
-
-  makeEventMarkers(map: L.map): void {
+  jsonTest = L.geoJson();
+  isRunning: boolean = true;
+    makeEventMarkers(map: L.map): void {
     const popupOptions = {
       className: "eventPopup"
     };
     var markerCount = 0;
     var date;
+    
     var today = moment().format('YYYY-MM-DD');
     var eventMarkerIcon= L.ExtraMarkers.icon({
       icon: 'fa-theater-masks',
@@ -41,6 +43,7 @@ export class MarkerService {
     });
     console.log('Creating markers...');
     this.http.get(this.events).subscribe((res: any) => {
+      this.jsonTest = res
       for (const c of res.features) {
         const datesJson = JSON.parse(c.properties.dates);
         for (let i = 0; i < datesJson.length; i++) {
@@ -57,8 +60,12 @@ export class MarkerService {
           this.events_grp.addLayer(cluster);
           markerCount++;
         }
+        else {
+          console.log('event is in the past');
+        }
       }
       console.log('Created ' + markerCount + ' event markers');
+      this.isRunning = false;
     });
     // add event clusters/markers to map
     //map.addLayer(cluster);

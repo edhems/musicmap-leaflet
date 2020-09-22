@@ -1,6 +1,10 @@
 import { AfterViewInit, Component, NgModule } from '@angular/core';
 import * as L from 'leaflet';
 import { MarkerService } from '../_services/marker.service';
+import 'leaflet-search'
+import { Router } from '@angular/router';
+
+
 
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
@@ -25,17 +29,17 @@ const iconDefault = L.icon({
 })
 export class MapComponent implements AfterViewInit {
   private map;
-
   constructor(private markerService: MarkerService) {}
   ngAfterViewInit(): void {
     this.initMap();
     this.markerService.makeEventMarkers(this.map);
     this.markerService.makeOrganizerMarkers(this.map);
+    
   }
   private initMap(): void {
     this.map = L.map('map', {
-      center: [47.8235, 13.0393],
-      zoom: 10,
+      center: [47.799896, 13.046367],
+      zoom: 12,
     });
 
     const cartoTiles = L.tileLayer(
@@ -101,6 +105,23 @@ export class MapComponent implements AfterViewInit {
 
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
-    this.markerService.events_grp.addTo(this.map);
+    var searchLayer1 = this.markerService.events_grp.addTo(this.map);
+    var searchLayer2 = this.markerService.jsonTest
+    var search = new L.Control.Search({
+      position: "topleft",
+      layer: searchLayer2,
+      propertyName: 'organizer'
+
+    });
+
+    this.map.addControl(search);
+    
+
+
+  }
+
+   CheckStatus(status: boolean){
+    status = this.markerService.isRunning
+    return status
   }
 }

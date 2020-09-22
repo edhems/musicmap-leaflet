@@ -1,5 +1,10 @@
 <div class="map-container">
-   <div class="map-frame">
+  <div class="map-frame">
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="CheckStatus()"
+      color="warn"
+    ></mat-progress-bar>
     <div id="map"></div>
   </div>
 </div>
