@@ -17,6 +17,7 @@ export class MarkerService {
     'http://human.zgis.at/geoserver/music_map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=music_map:salzburg_info_api&outputFormat=application%2Fjson';
   organizers: string =
     'http://human.zgis.at/geoserver/music_map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=music_map:musicmap_organizers&outputFormat=application%2Fjson';
+    
 
   constructor(private http: HttpClient, private popupService: PopUpService) {}
   organizers_grp = L.layerGroup();

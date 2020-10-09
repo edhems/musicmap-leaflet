@@ -9,7 +9,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: 'map', component: MapComponent},
   {path: '', redirectTo: '/', pathMatch: 'full'},
-  {path: '**', component: PageNotFoundComponent }
+  {path: '**', component: MapComponent }
 ];
 
 @NgModule({

@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, NgModule } from '@angular/core';
 import * as L from 'leaflet';
 import { MarkerService } from '../_services/marker.service';
-import 'leaflet-search'
+import { PopUpService } from '../_services/pop-up.service';
+import 'leaflet-search';
 import { Router } from '@angular/router';
-
-
-
+import { HttpClient } from '@angular/common/http';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -29,12 +28,11 @@ const iconDefault = L.icon({
 })
 export class MapComponent implements AfterViewInit {
   private map;
-  constructor(private markerService: MarkerService) {}
+  constructor(private http: HttpClient, private markerService: MarkerService) {}
   ngAfterViewInit(): void {
     this.initMap();
     this.markerService.makeEventMarkers(this.map);
     this.markerService.makeOrganizerMarkers(this.map);
-    
   }
   private initMap(): void {
     this.map = L.map('map', {
@@ -99,29 +97,29 @@ export class MapComponent implements AfterViewInit {
     };
 
     var overlays = {
-      'Organizers' : this.markerService.organizers_grp,
-      'Events' : this.markerService.events_grp
-    }
-
+      Organizers: this.markerService.organizers_grp,
+      Events: this.markerService.events_grp,
+    };
+     
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
-    var searchLayer1 = this.markerService.events_grp.addTo(this.map);
-    var searchLayer2 = this.markerService.jsonTest
+    //TODO: Search through dates, solve multi date error
+    
+   
+    var searchLayer1 = this.markerService.events_grp;
+    var searchLayer2 = this.markerService.jsonTest;
     var search = new L.Control.Search({
-      position: "topleft",
-      layer: searchLayer2,
-      propertyName: 'organizer'
-
+      position: 'topleft',
+      layer: searchLayer1,
+      propertyName: 'organizer',
     });
 
     this.map.addControl(search);
-    
-
-
+   
   }
 
-   CheckStatus(status: boolean){
-    status = this.markerService.isRunning
-    return status
+  CheckStatus() {
+    var status = this.markerService.isRunning;
+    return status;
   }
 }

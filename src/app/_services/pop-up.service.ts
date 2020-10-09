@@ -23,11 +23,11 @@ export class PopUpService {
       `` +
       `<div><img class="popupimg" src= ${imgLink}; alt="no image" ><div>` +
       `<div>Title: ${feature.properties.name}</div>` +
-      `<div>Dates Raw: ${feature.properties.dates}</div>` +
-      `<div>From: ${eventDate.from}</div>` +
-      `<div>To: ${eventDate.to}</div>` +
-      `<div>Time: ${eventDate.timeBegin}</div>` +
-      `<div>Place: ${feature.properties.town}</div>`
+      //`<div>Dates Raw: ${feature.properties.dates}</div>` +
+      `<div><b>Start:</b> ${eventDate.from}</div>` +
+      `<div><b>End:</b> ${eventDate.to}</div>` +
+      `<div><b>Time:</b> ${eventDate.timeBegin}</div>` 
+      //`<div>Place: ${feature.properties.town}</div>` TODO: Specify address
     );
     //`<div>Event ID: ${ feature.properties.raw_data }</div>`
   }
