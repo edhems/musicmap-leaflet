@@ -10,15 +10,14 @@ export class PopUpService {
     var eventDate;
     //the dates are an array of jsons, so this loop parses and extracts the start and end date and the time
     var dates = feature.properties.dates;
-    var jsonDates = JSON.parse(dates.replace('"', '"'));
+    var jsonDates = JSON.parse(dates.replace('"', '"')); //replace probably not necessary
     for (let i = 0; i < jsonDates.length; i++) {
       eventDate = jsonDates[i];
     }
-
     var img = feature.properties.images;
-
+    //removes the tick marks so the link is "clean"
     var imgLink = img.slice(1, -1);
-    //console.log(imgLink);
+
     return (
       `` +
       `<div><img class="popupimg" src= ${imgLink}; alt="no image" ><div>` +
@@ -26,7 +25,7 @@ export class PopUpService {
       //`<div>Dates Raw: ${feature.properties.dates}</div>` +
       `<div><b>Start:</b> ${eventDate.from}</div>` +
       `<div><b>End:</b> ${eventDate.to}</div>` +
-      `<div><b>Time:</b> ${eventDate.timeBegin}</div>` 
+      `<div><b>Time:</b> ${eventDate.timeBegin}</div>`
       //`<div>Place: ${feature.properties.town}</div>` TODO: Specify address
     );
     //`<div>Event ID: ${ feature.properties.raw_data }</div>`
@@ -42,4 +41,3 @@ export class PopUpService {
     );
   }
 }
-//style='height: 100%; width: 100%; object-fit: contain'

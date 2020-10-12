@@ -1,25 +1,9 @@
 import { AfterViewInit, Component, NgModule } from '@angular/core';
 import * as L from 'leaflet';
 import { MarkerService } from '../_services/marker.service';
-import { PopUpService } from '../_services/pop-up.service';
 import 'leaflet-search';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
-const iconRetinaUrl = 'assets/marker-icon-2x.png';
-const iconUrl = 'assets/marker-icon.png';
-const shadowUrl = 'assets/marker-shadow.png';
-const iconDefault = L.icon({
-  iconRetinaUrl,
-  iconUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41],
-});
-//L.Marker.prototype.options.icon = iconDefault;
 
 @Component({
   selector: 'app-map',
@@ -103,9 +87,10 @@ export class MapComponent implements AfterViewInit {
      
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
+
+
+
     //TODO: Search through dates, solve multi date error
-    
-   
     var searchLayer1 = this.markerService.events_grp;
     var searchLayer2 = this.markerService.jsonTest;
     var search = new L.Control.Search({
