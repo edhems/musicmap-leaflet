@@ -4,12 +4,14 @@ import { MarkerService } from '../_services/marker.service';
 import 'leaflet-search';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import 'leaflet.heat'
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
+
 export class MapComponent implements AfterViewInit {
   private map;
   constructor(private http: HttpClient, private markerService: MarkerService) {}
@@ -17,6 +19,9 @@ export class MapComponent implements AfterViewInit {
     this.initMap();
     this.markerService.makeEventMarkers(this.map);
     this.markerService.makeOrganizerMarkers(this.map);
+    // Calling the makeHeatMap functions which will make a heat map and store it in the Heatmap layerGroup
+    this.markerService.makeHeatMap(this.map);
+   
   }
   private initMap(): void {
     this.map = L.map('map', {
@@ -73,6 +78,9 @@ export class MapComponent implements AfterViewInit {
         ],
       }
     );
+
+    this.markerService.events
+
     var baseMaps = {
       'Carto Light': cartoTiles,
       'Open Street Map': osm,
@@ -83,6 +91,7 @@ export class MapComponent implements AfterViewInit {
     var overlays = {
       Organizers: this.markerService.organizers_grp,
       Events: this.markerService.events_grp,
+      HeatMap: this.markerService.heat_grp,
     };
      
     L.control.layers(baseMaps, overlays).addTo(this.map);
