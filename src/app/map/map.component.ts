@@ -17,11 +17,11 @@ export class MapComponent implements AfterViewInit {
   constructor(private http: HttpClient, private markerService: MarkerService) {}
   ngAfterViewInit(): void {
     this.initMap();
-    this.markerService.makeEventMarkers(this.map);
+    //this.markerService.makeEventMarkers(this.map);
     this.markerService.makeOrganizerMarkers(this.map);
     // Calling the makeHeatMap functions which will make a heat map and store it in the Heatmap layerGroup
     this.markerService.makeHeatMap(this.map);
-   
+    //this.EnableSearch();
   }
   private initMap(): void {
     this.map = L.map('map', {
@@ -96,24 +96,60 @@ export class MapComponent implements AfterViewInit {
      
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
-
-
+    var search = this.markerService.makeEventMarkers(this.map);
+    this.EnableSearch();
+    
 
     //TODO: Search through dates, solve multi date error
-    var searchLayer1 = this.markerService.events_grp;
-    var searchLayer2 = this.markerService.jsonTest;
-    var search = new L.Control.Search({
-      position: 'topleft',
-      layer: searchLayer1,
-      propertyName: 'organizer',
-    });
+    
+  //   for (const i in searchLayer1) {
+  //     const title = searchLayer1[i].getLayer(i);  // value searched
+  //     console.log("Tilte: " +title);
+  //     console.log(searchLayer1[i]);
+  //     searchLayer1.title= searchLayer1.title || 'Default title' // !!!!!!!!!!!check and default value
+  //     const lat = searchLayer1[i].geometry.coordinates[0];      // position found
+  //     console.log(lat);
+  //     const lon = searchLayer1[i].coordinates[1];   
+  //        // position found
+  //     const marker1 = L.marker([lon,lat], { 'title': title }) // se property searched
+  //     marker1.bindPopup('title: ' + title)
+  //     searchLayer1.addLayer(marker1)
+  // }
 
-    this.map.addControl(search);
-   
   }
-
+  
   CheckStatus() {
     var status = this.markerService.isRunning;
     return status;
   }
+
+  async EnableSearch(): Promise<void> {
+    ///////////////////////////////
+      console.log("Marker");
+      await this.markerService.makeEventMarkers(this.map);
+      var gJ = new L.geoJSON(this.markerService.events_grp.toGeoJSON());
+      console.log(gJ);
+      var searchControl = new L.Control.Search({
+        layer: gJ,//this.markerService.makeEventMarkers(this.map),
+        propertyName: 'name',
+        //marker: false,
+        moveToLocation: function(latlng, title, map) {
+          map.fitBounds( latlng.layer.getBounds() );
+          var zoom = map.getBoundsZoom(latlng.layer.getBounds());
+            map.setView(latlng, zoom); // access the zoom
+        }
+  
+      });
+      /////////////////////////////////
+      this.map.addControl(searchControl);
+      console.log("Search Enableed.")
+      // var searchLayer1 = await this.markerService.makeEventMarkers(this.map);
+      // var searchLayer2 = this.markerService.jsonTest;
+      // var search = new L.Control.Search({
+      //   position: 'topleft',
+      //   layer: searchLayer1,
+      //   propertyName: 'name',
+      // });
+      // this.map.addControl(search);
+    }
 }
