@@ -28,8 +28,51 @@ export class MarkerService {
 
   heat_grp = L.layerGroup();
   jsonTest = L.geoJson();
+  jsonTest1 = L.geoJson();
   isRunning: boolean = true;
+  searchControl: any;
 
+  // returnFeaureJson() {
+  //   var markerCount = 0;
+  //       var date;
+  //       var today = moment().format('YYYY-MM-DD');
+  //       let cluster = L.markerClusterGroup ({
+  //       });
+  //       console.log('Creating markers...');
+
+  //         this.http.get(this.events).subscribe((res: any) => {
+  //         this.jsonTest1 = res;
+  //         console.log(JSON.stringify(res));
+  //         for (const c of res.features) {
+  //           const datesJson = JSON.parse(c.properties.dates);
+  //           for (let i = 0; i < datesJson.length; i++) {
+  //             date = datesJson[i];
+  //           }
+  //           // If the event hasent happend yet it will be considerd for heatmap generation.
+  //           if (date.to > today) {
+  //             markerCount++;
+  //             // Getting the lat and lon
+  //             const lat = c.geometry.coordinates[0];
+  //             const lon = c.geometry.coordinates[1];
+  //             // Using another list to store each coordinate pair seperate.
+  //             let innerlist = [lon,lat,0.4];
+  //           } else {
+  //             console.log('event is in the past');
+  //           }
+  //           for (let i = 0; i<markerCount; i++){
+  //           }
+  //         }
+          
+  //         console.log('Created ' + markerCount + ' heat points');
+  //         this.isRunning = false;
+  //         return Promise.resolve(this.jsonTest1);
+  //       });
+        
+  //       return Promise.resolve(this.jsonTest1);
+  //       // Adding the cluster to a groupedLayer.
+  // }
+  
+  
   ///Function to mak a Heatmap form the events. Uses leaflet.heat plugin for the heatmap.
   makeHeatMap(map: L.map): void {
     
@@ -46,6 +89,7 @@ export class MarkerService {
         console.log('Creating markers...');
         this.http.get(this.events).subscribe((res: any) => {
           this.jsonTest = res;
+          console.log(JSON.stringify(res));
           for (const c of res.features) {
             const datesJson = JSON.parse(c.properties.dates);
             for (let i = 0; i < datesJson.length; i++) {
@@ -84,9 +128,8 @@ export class MarkerService {
         // Adding the cluster to a groupedLayer.
         this.heat_grp.addLayer(cluster);
   }
-
-  makeEventMarkers(map: L.map): Promise<L.LayerGroup> {
-    return new Promise<L.LayerGroup>(resolve => {
+  
+  makeEventMarkers(map: L.map): void {
       const popupOptions = {
         className: 'eventPopup',
       };
@@ -126,18 +169,70 @@ export class MarkerService {
           }
           
         }
-
-        
         console.log('Created ' + markerCount + ' event markers');
         this.isRunning = false;
-        
       });
-      
       console.log("Return:");
       console.log(this.events_grp);
-      resolve(this.events_grp);
-  });
+      
+  };
+  
+
+  EnableSearch(map: L.map) {     
+      var markerCount = 0;
+        var date;
+        var today = moment().format('YYYY-MM-DD');
+        let cluster = L.markerClusterGroup ({
+        });
+        console.log('Creating markers...');
+
+          this.http.get(this.events).subscribe((res: any) => {
+          this.jsonTest1 = res;
+          //console.log(JSON.stringify(res));
+          for (const c of res.features) {
+            const datesJson = JSON.parse(c.properties.dates);
+            for (let i = 0; i < datesJson.length; i++) {
+              date = datesJson[i];
+            }
+            // If the event hasent happend yet it will be considerd for heatmap generation.
+            if (date.to > today) {
+              markerCount++;
+              // Getting the lat and lon
+              const lat = c.geometry.coordinates[0];
+              const lon = c.geometry.coordinates[1];
+              // Using another list to store each coordinate pair seperate.
+              let innerlist = [lon,lat,0.4];
+            } else {
+              console.log('event is in the past');
+            }
+            for (let i = 0; i<markerCount; i++){
+            }
+          }
+          
+          console.log('Created ' + markerCount + ' search points');
+          console.log(res);
+          
+          this.searchControl = new L.Control.Search({
+            layer: res, //L.layerGroup(this.events_grp),//this.markerService.makeEventMarkers(this.map),
+           propertyName: 'name',
+           //marker: false,
+           moveToLocation: function(latlng, title, map) {
+             map.fitBounds( latlng.layer.getBounds() );
+             var zoom = map.getBoundsZoom(latlng.layer.getBounds());
+             map.setView(latlng, zoom); // access the zoom
+           }
+         
+          });
+        
+         
+         console.log("Search Enabled.")
+         console.log("RES: ");
+         console.log(res)
+         this.isRunning = false;
+        });
   }
+
+
   makeOrganizerMarkers(map: L.map): void {
     var orgMarkerIcon = L.ExtraMarkers.icon({
       icon: 'fa-landmark',
