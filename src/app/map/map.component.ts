@@ -99,7 +99,7 @@ export class MapComponent implements AfterViewInit {
       HeatMap: this.markerService.heat_grp,
     };
 
-
+    
 
     // const bootstrap = async () => {
     //   const filePath = 'src/assets/exLib/leaflet.fusesearch.js';
@@ -153,39 +153,4 @@ export class MapComponent implements AfterViewInit {
     var status = this.markerService.isRunning;
     return status;
   }
-  // async wait(ms) {
-  //   return new Promise(resolve => {
-  //     setTimeout(resolve, ms);
-  //   });
-  // }
-
-  // async getSearchLayer()  {
-  //   console.log("This.MarkerService events -->");
-  //   console.log(this.markerService.events_grp);
-  //   console.log("sec 0");
-  //   // var search = this.markerService.makeEventMarkers(this.map);
-  //   await this.wait(20000);
-  //   console.log("sec 8");
-  //   var geoLayer = new L.geoJSON(this.markerService.events_grp.toGeoJSON(),{});
-  //   // console.log("geoLayer:");
-  //   // console.log(JSON.stringify(geoLayer));
-  //   // console.log(geoLayer);
-  //   var search = new L.Control.Search({
-  //     position: 'topleft',
-  //     layer: geoLayer,
-  //     propertyName: 'name',
-  //   });
-  //   this.map.addControl( search );  
-  //   // var search = new L.Control.Search({
-  //   //   layer: geoLayer,
-  //   //   propertyName: 'name',
-  //   //   //marker: false,
-  //   //   moveToLocation: function(latlng, title, map) {
-  //   //     map.fitBounds( latlng.layer.getBounds() );
-  //   //     var zoom = map.getBoundsZoom(latlng.layer.getBounds());
-  //   //       map.setView(latlng, zoom); // access the zoom
-  //   //   }
-  //   // });
-  // }
-
 }
