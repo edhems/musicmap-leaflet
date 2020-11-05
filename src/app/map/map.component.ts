@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, NgModule } from '@angular/core';
+import { AfterViewInit, Component, NgModule, setTestabilityGetter } from '@angular/core';
 import * as L from 'leaflet';
 import { MarkerService } from '../_services/marker.service';
 import 'leaflet-search';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat'
+import { fuseSearch } from '../exLib/leaflet.fusesearch.js';
 
 @Component({
   selector: 'app-map',
@@ -13,16 +14,20 @@ import 'leaflet.heat'
 })
 
 export class MapComponent implements AfterViewInit {
-  
+  //searchCtrl = L.control.fuseSearch();
   private map;
-  constructor(private http: HttpClient, private markerService: MarkerService) {}
+  constructor(private http: HttpClient, private markerService: MarkerService) {
+  // const searchCtrl = L.Control.fuseSearch();
+  }
   ngAfterViewInit(): void {
     this.initMap();
     this.markerService.makeEventMarkers(this.map);
-    this.markerService.makeOrganizerMarkers(this.map);
+    this.markerService.makeOrganizerMarkers();
     // Calling the makeHeatMap functions which will make a heat map and store it in the Heatmap layerGroup
     this.markerService.makeHeatMap(this.map);
-    this.markerService.EnableSearch(this.map);
+    // this.getSearchLayer();
+    // this.markerService.EnableSearch(this.map);
+    
     
   }
   private initMap(): void {
@@ -93,20 +98,38 @@ export class MapComponent implements AfterViewInit {
       Events: this.markerService.events_grp,
       HeatMap: this.markerService.heat_grp,
     };
-     
+
+
+
+    // const bootstrap = async () => {
+    //   const filePath = 'src/assets/exLib/leaflet.fusesearch.js';
+    //   const compiled = await tsImport.compile(filePath);
+    // };
+    // bootstrap();
+
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
-
-    //var search = this.markerService.makeEventMarkers(this.map);
     
+    // console.log("sec 0");
+    //var search = this.markerService.makeEventMarkers(this.map);
+    // this.wait(8000);
+    // console.log("sec 8");
     // var searchLayer1 = this.markerService.events_grp.toGeoJSON();
+    // console.log(JSON.stringify(searchLayer1));
     // var searchLayer2 = this.markerService.events_grp;
     // var search = new L.Control.Search({
     //   position: 'topleft',
     //   layer: searchLayer1,
     //   propertyName: 'name',
     // });
-
+    // this.map.addControl( search );  
+    // setTimeout(this.getSearchLayer, 9000);
+    // var geoL = this.getSearchLayer();
+    // console.log("GeoL has been passed");
+    // this.wait(8000);
+    // console.log(JSON.stringify(geoL));
+    // search.addLayer(geoL);
+    //inizialize search control
     // TODO: Search through dates, solve multi date error
     
     // for (const i in searchLayer1) {
@@ -124,11 +147,45 @@ export class MapComponent implements AfterViewInit {
   // }
   //////////////////////////////
 
-}
+  }
   
   CheckStatus() {
     var status = this.markerService.isRunning;
     return status;
   }
+  // async wait(ms) {
+  //   return new Promise(resolve => {
+  //     setTimeout(resolve, ms);
+  //   });
+  // }
+
+  // async getSearchLayer()  {
+  //   console.log("This.MarkerService events -->");
+  //   console.log(this.markerService.events_grp);
+  //   console.log("sec 0");
+  //   // var search = this.markerService.makeEventMarkers(this.map);
+  //   await this.wait(20000);
+  //   console.log("sec 8");
+  //   var geoLayer = new L.geoJSON(this.markerService.events_grp.toGeoJSON(),{});
+  //   // console.log("geoLayer:");
+  //   // console.log(JSON.stringify(geoLayer));
+  //   // console.log(geoLayer);
+  //   var search = new L.Control.Search({
+  //     position: 'topleft',
+  //     layer: geoLayer,
+  //     propertyName: 'name',
+  //   });
+  //   this.map.addControl( search );  
+  //   // var search = new L.Control.Search({
+  //   //   layer: geoLayer,
+  //   //   propertyName: 'name',
+  //   //   //marker: false,
+  //   //   moveToLocation: function(latlng, title, map) {
+  //   //     map.fitBounds( latlng.layer.getBounds() );
+  //   //     var zoom = map.getBoundsZoom(latlng.layer.getBounds());
+  //   //       map.setView(latlng, zoom); // access the zoom
+  //   //   }
+  //   // });
+  // }
 
 }

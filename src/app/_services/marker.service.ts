@@ -7,7 +7,7 @@ import * as moment from 'moment';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
 import 'leaflet.heat';
-import { MapComponent } from '../map/map.component';
+
 
 @Injectable({
   providedIn: 'root',
@@ -24,13 +24,14 @@ export class MarkerService {
   // Layer Groups for organization and seperate displaying.
   organizers_grp = L.layerGroup();
   events_grp = L.layerGroup();
+  events_grp2 = L.layerGroup();
   // SearchLayerTesting
 
   heat_grp = L.layerGroup();
   jsonTest = L.geoJson();
   jsonTest1 = L.geoJson();
   isRunning: boolean = true;
-  searchControl: any;
+  //searchControl: any;
 
   // returnFeaureJson() {
   //   var markerCount = 0;
@@ -73,7 +74,7 @@ export class MarkerService {
   // }
   
   
-  ///Function to mak a Heatmap form the events. Uses leaflet.heat plugin for the heatmap.
+  ///Function to make a Heatmap from the events. Uses leaflet.heat plugin for the heatmap.
   makeHeatMap(map: L.map): void {
     
         var markerCount = 0;
@@ -89,7 +90,7 @@ export class MarkerService {
         console.log('Creating markers...');
         this.http.get(this.events).subscribe((res: any) => {
           this.jsonTest = res;
-          console.log(JSON.stringify(res));
+          //console.log(JSON.stringify(res));
           for (const c of res.features) {
             const datesJson = JSON.parse(c.properties.dates);
             for (let i = 0; i < datesJson.length; i++) {
@@ -149,7 +150,9 @@ export class MarkerService {
       console.log('Creating markers...');
       this.http.get(this.events).subscribe((res: any) => {
         this.jsonTest = res;
+        console.log(res);
         for (const c of res.features) {
+
           const datesJson = JSON.parse(c.properties.dates);
           for (let i = 0; i < datesJson.length; i++) {
             date = datesJson[i];
@@ -158,82 +161,108 @@ export class MarkerService {
           if (date.to > today) {
             const lat = c.geometry.coordinates[0];
             const lon = c.geometry.coordinates[1];
-            const marker = L.marker([lon, lat], { icon: eventMarkerIcon });
+            const marker = L.marker([lon, lat], { icon: eventMarkerIcon, title: c.properties.name });
           
-            marker.bindPopup(this.popupService.makeEventPopup(c), popupOptions);
-            cluster.addLayer(marker);
+            var ball = this.popupService.makeEventPopup(c);
+            // cluster.addLayer(marker);
+            cluster.addLayer(
+              L.geoJSON(c, {
+                pointToLayer: function(c, latlng) {
+                  return L.marker(latlng, {
+                    icon: eventMarkerIcon,
+                  }).bindPopup(ball,popupOptions
+                  //   '<div><img class="popupimg" src= '+ c.properties.images +'; alt="no image" ><div' +
+                  // '<div id=name>Title: '+c.properties.name +'</div>' +
+                  // '<div><b>Start:</b>'+ c.properties.dates[0].from    +'</div>' +
+                  // '<div><b>End:  </b>'+ c.properties.to    +'</div>' +
+                  // '<div><b>Time: </b>'+ c.properties.timeBegin+'</div>'
+                  );
+                }
+              }));
+            
             this.events_grp.addLayer(cluster);
+            // this.events_grp2.addLayer(L.geoJSON(c));
             markerCount++;
           } else {
             console.log('event is in the past');
           }
-          
+      
+        // this.events_grp2.addLayer(c);
+        
         }
+        // var geoLayer = new L.geoJSON(this.events_grp.toGeoJSON());
+        var search = new L.Control.Search({
+          position: 'topleft',
+          layer: L.geoJSON(this.events_grp.toGeoJSON()),
+          propertyName: 'name',//'additionalInfos'
+        });
+        map.addControl(search);
+        console.log(L.Icon.Default.prototype._getIconUrl());
         console.log('Created ' + markerCount + ' event markers');
         this.isRunning = false;
       });
+      
       console.log("Return:");
       console.log(this.events_grp);
-      
   };
   
 
-  EnableSearch(map: L.map) {     
-      var markerCount = 0;
-        var date;
-        var today = moment().format('YYYY-MM-DD');
-        let cluster = L.markerClusterGroup ({
-        });
-        console.log('Creating markers...');
+  // EnableSearch(map: L.map) {     
+  //     var markerCount = 0;
+  //       var date;
+  //       var today = moment().format('YYYY-MM-DD');
+  //       let cluster = L.markerClusterGroup ({
+  //       });
+  //       console.log('Creating markers...');
 
-          this.http.get(this.events).subscribe((res: any) => {
-          this.jsonTest1 = res;
-          //console.log(JSON.stringify(res));
-          for (const c of res.features) {
-            const datesJson = JSON.parse(c.properties.dates);
-            for (let i = 0; i < datesJson.length; i++) {
-              date = datesJson[i];
-            }
-            // If the event hasent happend yet it will be considerd for heatmap generation.
-            if (date.to > today) {
-              markerCount++;
-              // Getting the lat and lon
-              const lat = c.geometry.coordinates[0];
-              const lon = c.geometry.coordinates[1];
-              // Using another list to store each coordinate pair seperate.
-              let innerlist = [lon,lat,0.4];
-            } else {
-              console.log('event is in the past');
-            }
-            for (let i = 0; i<markerCount; i++){
-            }
-          }
+  //         this.http.get(this.events).subscribe((res: any) => {
+  //         this.jsonTest1 = res;
+  //         //console.log(JSON.stringify(res));
+  //         for (const c of res.features) {
+  //           const datesJson = JSON.parse(c.properties.dates);
+  //           for (let i = 0; i < datesJson.length; i++) {
+  //             date = datesJson[i];
+  //           }
+  //           // If the event hasent happend yet it will be considerd for heatmap generation.
+  //           if (date.to > today) {
+  //             markerCount++;
+  //             // Getting the lat and lon
+  //             const lat = c.geometry.coordinates[0];
+  //             const lon = c.geometry.coordinates[1];
+  //             // Using another list to store each coordinate pair seperate.
+  //             let innerlist = [lon,lat,0.4];
+  //           } else {
+  //             console.log('event is in the past');
+  //           }
+  //           for (let i = 0; i<markerCount; i++){
+  //           }
+  //         }
           
-          console.log('Created ' + markerCount + ' search points');
-          console.log(res);
+  //         console.log('Created ' + markerCount + ' search points');
+  //         console.log(res);
           
-          this.searchControl = new L.Control.Search({
-            layer: res, //L.layerGroup(this.events_grp),//this.markerService.makeEventMarkers(this.map),
-           propertyName: 'name',
-           //marker: false,
-           moveToLocation: function(latlng, title, map) {
-             map.fitBounds( latlng.layer.getBounds() );
-             var zoom = map.getBoundsZoom(latlng.layer.getBounds());
-             map.setView(latlng, zoom); // access the zoom
-           }
+  //         this.searchControl = new L.Control.Search({
+  //           layer: res, //L.layerGroup(this.events_grp),//this.markerService.makeEventMarkers(this.map),
+  //          propertyName: 'name',
+  //          //marker: false,
+  //          moveToLocation: function(latlng, title, map) {
+  //            map.fitBounds( latlng.layer.getBounds() );
+  //            var zoom = map.getBoundsZoom(latlng.layer.getBounds());
+  //            map.setView(latlng, zoom); // access the zoom
+  //          }
          
-          });
+  //         });
         
          
-         console.log("Search Enabled.")
-         console.log("RES: ");
-         console.log(res)
-         this.isRunning = false;
-        });
-  }
+  //        console.log("Search Enabled.")
+  //        console.log("RES: ");
+  //        console.log(res)
+  //        this.isRunning = false;
+  //       });
+  // }
 
 
-  makeOrganizerMarkers(map: L.map): void {
+  makeOrganizerMarkers(): void {
     var orgMarkerIcon = L.ExtraMarkers.icon({
       icon: 'fa-landmark',
       markerColor: '#673ab7',
@@ -251,24 +280,5 @@ export class MarkerService {
       }
     });
   }
-  // getSearchLayer(map: L.map): any {
-    
-  //   console.log(this.events_grp);
-    
-    
-  //   var geoLayer = new L.geoJSON(this.events_grp.toGeoJSON(),{});
-  //   console.log(geoLayer);
-  //   var searchControl = new L.Control.Search({
-  //     layer: geoLayer,
-  //     propertyName: 'name',
-  //     //marker: false,
-  //     moveToLocation: function(latlng, title, map) {
-  //       map.fitBounds( latlng.layer.getBounds() );
-  //       var zoom = map.getBoundsZoom(latlng.layer.getBounds());
-  //         map.setView(latlng, zoom); // access the zoom
-  //     }
-  //   });
-
-  //   return searchControl;
-  // }
+  
 }
