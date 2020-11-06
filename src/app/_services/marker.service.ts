@@ -126,8 +126,6 @@ export class MarkerService {
                   }).bindPopup(popupContent,popupOptions);
                 }
               }));
-            // Adding the cluster to a Layergroup wich can be enabled/disabled
-            // this.events_grp.addLayer(this.cluster);
             markerCount++;
           } else {
             console.log('event is in the past');
