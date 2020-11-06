@@ -8,21 +8,16 @@ import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
 import 'leaflet.heat';
 import 'leaflet.markercluster.layersupport';
-import { icon, Marker } from 'leaflet';
-const iconRetinaUrl = 'assets/marker-icon-2x.png';
-const iconUrl = 'assets/marker-icon.png';
-const shadowUrl = 'assets/marker-shadow.png'
-const iconDefault = icon({
-  iconRetinaUrl,
-  iconUrl,
-  shadowUrl,
-  iconSize: [0, 0],
-  iconAnchor: [0, 0],
-  popupAnchor: [0, 0],
-  tooltipAnchor: [0, 0],
-  shadowSize: [0, 0]
-});
-Marker.prototype.options.icon = iconDefault;
+// import  * as $ from 'jquery';
+// import 'jquery-ui';
+// import 'bower_components/leaflet-slider/SliderControl.js';
+// import * as URL from "url";
+// let myUrl = URL.parse("http://www.typescriptlang.org");
+
+
+// import 'http://code.jquery.com/jquery-1.9.1.min.js';
+// import 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css';
+
 
 @Injectable({
   providedIn: 'root',
@@ -121,10 +116,6 @@ export class MarkerService {
           }
           //console.log(date.from + 'today is ' + today);
           if (date.to > today) {
-            const lat = c.geometry.coordinates[0];
-            const lon = c.geometry.coordinates[1];
-            //const marker = L.marker([lon, lat], { icon: eventMarkerIcon, title: c.properties.name });
-          
             var popupContent = this.popupService.makeEventPopup(c);
             // Creating the markers and adding them to the cluster, and creating the popup in one go
             this.events_grp.addLayer(
@@ -142,8 +133,6 @@ export class MarkerService {
             console.log('event is in the past');
           }
         }
-        console.log("this.cluster");
-        console.log(this.cluster);
         this.cluster.addTo(map);
         // The leaflet.markercluster.layersupport lets us use the CheckIn function for passing our LayerGroup to the cluster.
         this.cluster.checkIn(this.events_grp);
@@ -160,7 +149,7 @@ export class MarkerService {
           moveToLocation: function(latlng, title, map) {
             //map.fitBounds( latlng.layer.getBounds() );
             //var zoom = map.getBoundsZoom(latlng);
-              map.setView(latlng, 20);
+              map.setView(latlng, 19);
 
               console.log(latlng.layer);
               console.log(title);
@@ -174,7 +163,8 @@ export class MarkerService {
           // An If clause to check if the Icon is not displayed which means that the marker is still clusterd
           // This will zoom to the cluster, open it (spiderfy) and then open the popup.
           if (!event.layer._icon){
-            map.setView(event.latlng, 20);
+            map.setView(event.latlng, 19);
+            // Setting a small .4 second delay, since it would not open the last clustering, if the markers are still clusterd on the highest zoom level.
             setTimeout(() => { event.layer.__parent.spiderfy(); event.layer.openPopup();}, 400);
           }
           // If the Icon allready is displayed, the marker isnt clusterd anymore and we can go ahead and open it up.
@@ -184,6 +174,9 @@ export class MarkerService {
         });  
         // Adding the Search to the Map 
         map.addControl(search);
+        // This is necessary since the search function would add duplicates of every marker.
+        // So to counter this, the search layer gets cleared again. Searching is still possible.
+        // search.clearLayer();
         console.log(L.Icon.Default.prototype._getIconUrl());
         console.log('Created ' + markerCount + ' event markers');
         this.isRunning = false;
@@ -208,4 +201,18 @@ export class MarkerService {
       }
     });
   }
+
+  // makeTimeSlider(map: L.map){
+  //   setTimeout(() => { var sliderControl = L.control.sliderControl({
+  //     position: "topright",
+  //     layer: this.events_grp,
+  //     range: true
+  //   });
+  
+  //   //Make sure to add the slider to the map ;-)
+  //   map.addControl(sliderControl);
+  //   //And initialize the slider
+  //   sliderControl.startSlider();}, 1000);
+    
+  // }
 }

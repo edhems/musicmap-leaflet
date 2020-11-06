@@ -4,8 +4,9 @@ import { MarkerService } from '../_services/marker.service';
 import 'leaflet-search';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import 'leaflet.heat'
-import { fuseSearch } from '../exLib/leaflet.fusesearch.js';
+import 'leaflet.heat';
+import 'jquery';
+import 'bower_components/leaflet-slider/SliderControl.js';
 
 @Component({
   selector: 'app-map',
@@ -25,10 +26,7 @@ export class MapComponent implements AfterViewInit {
     this.markerService.makeOrganizerMarkers();
     // Calling the makeHeatMap functions which will make a heat map and store it in the Heatmap layerGroup
     this.markerService.makeHeatMap(this.map);
-    // this.getSearchLayer();
-    // this.markerService.EnableSearch(this.map);
-    
-    
+    // this.markerService.makeTimeSlider(this.map);
   }
   private initMap(): void {
     this.map = L.map('map', {
@@ -99,56 +97,10 @@ export class MapComponent implements AfterViewInit {
       HeatMap: this.markerService.heat_grp,
     };
 
-    
-
-    // const bootstrap = async () => {
-    //   const filePath = 'src/assets/exLib/leaflet.fusesearch.js';
-    //   const compiled = await tsImport.compile(filePath);
-    // };
-    // bootstrap();
-
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
-    
-    // console.log("sec 0");
-    //var search = this.markerService.makeEventMarkers(this.map);
-    // this.wait(8000);
-    // console.log("sec 8");
-    // var searchLayer1 = this.markerService.events_grp.toGeoJSON();
-    // console.log(JSON.stringify(searchLayer1));
-    // var searchLayer2 = this.markerService.events_grp;
-    // var search = new L.Control.Search({
-    //   position: 'topleft',
-    //   layer: searchLayer1,
-    //   propertyName: 'name',
-    // });
-    // this.map.addControl( search );  
-    // setTimeout(this.getSearchLayer, 9000);
-    // var geoL = this.getSearchLayer();
-    // console.log("GeoL has been passed");
-    // this.wait(8000);
-    // console.log(JSON.stringify(geoL));
-    // search.addLayer(geoL);
-    //inizialize search control
-    // TODO: Search through dates, solve multi date error
-    
-    // for (const i in searchLayer1) {
-    //   const title = searchLayer1[i].getLayer(i);  // value searched
-    //   console.log("Tilte: " +title);
-    //   console.log(searchLayer1[i]);
-    // searchLayer1.title= searchLayer1.title || 'Default title' // !!!!!!!!!!!check and default value
-      // const lat = searchLayer1[i].geometry.coordinates[0];      // position found
-  //     console.log(lat);
-  //     const lon = searchLayer1[i].coordinates[1];   
-  //        // position found
-  //     const marker1 = L.marker([lon,lat], { 'title': title }) // se property searched
-  //     marker1.bindPopup('title: ' + title)
-  //     searchLayer1.addLayer(marker1)
-  // }
-  //////////////////////////////
-
   }
-  
+
   CheckStatus() {
     var status = this.markerService.isRunning;
     return status;
