@@ -1,10 +1,28 @@
 <div class="map-container">
-  <div class="map-frame">
+  <!-- <div class="map-frame"> -->
     <mat-progress-bar
       mode="indeterminate"
       *ngIf="CheckStatus()"
       color="warn"
     ></mat-progress-bar>
-    <div id="map"></div>
-  </div>
+    <div id="map">
+      <div id="title">Salzburg Music Map</div>
+      <div id="footeroverlay">
+        <img class="music_map_logo" src="./assets/images/music_map_logo.png" />
+        <a href="https://www.uni-salzburg.at/" target="_blank"
+          ><img class="plus_logo" src="./assets/images/Plus-Logo-Farbe-Transparent.png"
+        /></a>
+        <a href="https://zgis.at/" target="_blank"
+          ><img class="zgis_logo" src="./assets/images/Z_GIS_solo.png"
+        /></a>
+        <a href="https://www.moz.ac.at/" target="_blank"
+          ><img class="mozarteum_logo" src="./assets/images/1200px-Mozarteum_Logo.png"
+        /></a>
+        <a href="https://w-k.sbg.ac.at/" target="_blank"
+          ><img class="wk_logo" src="./assets/images/WK_Logo_farbe.png"
+        /></a>
+      
+      </div>
+    </div>
+  <!-- </div> -->
 </div>

@@ -8,16 +8,7 @@ import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
 import 'leaflet.heat';
 import 'leaflet.markercluster.layersupport';
-// import  * as $ from 'jquery';
-// import 'jquery-ui';
-// import 'bower_components/leaflet-slider/SliderControl.js';
-// import * as URL from "url";
-// let myUrl = URL.parse("http://www.typescriptlang.org");
-
-
-// import 'http://code.jquery.com/jquery-1.9.1.min.js';
-// import 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css';
-
+import 'bower_components/leaflet-slider/SliderControl.js';
 
 @Injectable({
   providedIn: 'root',
@@ -107,14 +98,14 @@ export class MarkerService {
       console.log('Creating markers...');
       this.http.get(this.events).subscribe((res: any) => {
         this.jsonTest = res;
-        console.log(res);
+        // console.log(res);
         for (const c of res.features) {
 
           const datesJson = JSON.parse(c.properties.dates);
           for (let i = 0; i < datesJson.length; i++) {
             date = datesJson[i];
           }
-          //console.log(date.from + 'today is ' + today);
+          // console.log(date.from + 'today is ' + today);
           if (date.to > today) {
             var popupContent = this.popupService.makeEventPopup(c);
             // Creating the markers and adding them to the cluster, and creating the popup in one go
@@ -169,7 +160,25 @@ export class MarkerService {
           if(event.layer._popup){
             event.layer.openPopup();
           }
-        });  
+        });
+        console.log("ThisEvent");
+        console.log(this.events_grp._layers)//.[120].feature.properties.dates
+        //console.log(L.geoJson(this.events_grp));
+        setTimeout(() => { var sliderControl = L.control.sliderControl({
+          position: "topright",
+          layer: this.events_grp,//L.geoJson(this.events_grp),
+          range: true,
+          alwaysShowDate : true,
+          showAllOnStart: true,
+          timeAttribute: 'eventDate.from',
+          startTimeIdx: 14,    // where to start looking for a timestring
+          timeStrLength: 24,
+        });
+        //Make sure to add the slider to the map ;-)
+        map.addControl(sliderControl);
+        //And initialize the slider
+        sliderControl.startSlider();}, 1);
+
         // Adding the Search to the Map 
         map.addControl(search);
         // This is necessary since the search function would add duplicates of every marker.
@@ -203,14 +212,15 @@ export class MarkerService {
   // makeTimeSlider(map: L.map){
   //   setTimeout(() => { var sliderControl = L.control.sliderControl({
   //     position: "topright",
-  //     layer: this.events_grp,
+  //     layer: this.jsonTest,//L.geoJson(this.events_grp),
   //     range: true
   //   });
-  
+    
   //   //Make sure to add the slider to the map ;-)
   //   map.addControl(sliderControl);
   //   //And initialize the slider
-  //   sliderControl.startSlider();}, 1000);
+  //   sliderControl.startSlider();}, 10000);
     
   // }
+  
 }

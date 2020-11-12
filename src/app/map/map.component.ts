@@ -5,8 +5,6 @@ import 'leaflet-search';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat';
-import 'jquery';
-import 'bower_components/leaflet-slider/SliderControl.js';
 
 @Component({
   selector: 'app-map',
@@ -15,10 +13,10 @@ import 'bower_components/leaflet-slider/SliderControl.js';
 })
 
 export class MapComponent implements AfterViewInit {
-  //searchCtrl = L.control.fuseSearch();
+
   private map;
   constructor(private http: HttpClient, private markerService: MarkerService) {
-  // const searchCtrl = L.Control.fuseSearch();
+
   }
   ngAfterViewInit(): void {
     this.initMap();
