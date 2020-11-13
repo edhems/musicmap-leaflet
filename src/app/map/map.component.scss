@@ -50,11 +50,11 @@
 
 #footeroverlay {
   position: absolute;
-  display: block;
+  display: inline-block;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   top: 94%;
-  left: 0;
+  left: auto;
   right: 0%;
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.5);
@@ -64,7 +64,7 @@
 }
 #title {
   position: relative;
-  color: rgb(0, 0, 0);
+  color: #6ba2c1; // or black might be a good choice
   text-decoration: none;
   text-align: center;
   font-size: xx-large;

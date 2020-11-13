@@ -5,7 +5,7 @@ import 'leaflet-search';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import 'leaflet.heat';
-
+import 'jquery';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -23,14 +23,17 @@ export class MapComponent implements AfterViewInit {
     this.markerService.makeEventMarkers(this.map);
     this.markerService.makeOrganizerMarkers();
     // Calling the makeHeatMap functions which will make a heat map and store it in the Heatmap layerGroup
-    this.markerService.makeHeatMap(this.map);
+    //this.markerService.makeHeatMap(this.map);
     // this.markerService.makeTimeSlider(this.map);
+    
   }
   private initMap(): void {
     this.map = L.map('map', {
       center: [47.799896, 13.046367],
       zoom: 12,
     });
+
+    // this.map.on('overlayadd', this.markerService.makeHeatMap(this.map));
 
     const cartoTiles = L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
@@ -95,10 +98,24 @@ export class MapComponent implements AfterViewInit {
       HeatMap: this.markerService.heat_grp,
     };
 
+    
+
+    
+
+    // $(".leaflet-control-layers-selector").on('click',function () {
+    //   // get the selected option in the control layers :
+    //   this.map.eachLayer(function (layer) {
+    //       if (typeof layer.options.layers !== "undefined" && layer.options.layers !== "Events") {
+    //           var seleted_opt = layer.options.layers;
+    //       }
+    //   });
+    //   console.log("object");//function calls
+    // });
+
     L.control.layers(baseMaps, overlays).addTo(this.map);
     cartoTiles.addTo(this.map);
   }
-
+ 
   CheckStatus() {
     var status = this.markerService.isRunning;
     return status;

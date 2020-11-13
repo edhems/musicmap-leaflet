@@ -27,59 +27,40 @@ export class MarkerService {
   events_grp = L.layerGroup();
   heat_grp = L.layerGroup();
   jsonTest = L.geoJson();
+  // heat  = L.heatLayer();
   isRunning: boolean = true;
   cluster = L.markerClusterGroup.layerSupport({
     showCoverageOnHover: false,
   });
+  
+  // redrawHeatMap():void{
+  //   this.heat.redraw();
+  // }
+  
   ///Function to make a Heatmap from the events. Uses leaflet.heat plugin for the heatmap.
-  makeHeatMap(map: L.map): void {
-    
-        var markerCount = 0;
-        var date;
-        var today = moment().format('YYYY-MM-DD');
-        // Mother array wich will store as many array's as there are uptodate-events.
-        let heatPointArray = [];
-        console.log('Creating markers...');
-        this.http.get(this.events).subscribe((res: any) => {
-          this.jsonTest = res;
-          //console.log(JSON.stringify(res));
-          for (const c of res.features) {
-            const datesJson = JSON.parse(c.properties.dates);
-            for (let i = 0; i < datesJson.length; i++) {
-              date = datesJson[i];
-            }
-            // If the event hasent happend yet it will be considerd for heatmap generation.
-            if (date.to > today) {
-              markerCount++;
-              // Getting the lat and lon
-              const lat = c.geometry.coordinates[0];
-              const lon = c.geometry.coordinates[1];
-              // Using another list to store each coordinate pair seperate.
-              let innerlist = [lon,lat,0.4];
-              // Push each of the above created arrays into another array, creating an array of arrays 
-              // heatPointArray looking like : [[..][..][..]]
-              heatPointArray.push(innerlist);
-            } else {
-              console.log('event is in the past');
-            }
-            for (let i = 0; i<markerCount; i++){
-            }
-          }
-          console.log('Created ' + markerCount + ' heat points');
-          this.isRunning = false;
-        });
-        // Creating the actuall heatmap using the L.heatLayer function and adding it to a Layer Group. 
-        // Data intake should be of format: [[lon,lat,intesity][lon,lat,intesity][..]]
-        // styling of the heatmap gradient can be done after the coordinates. For help visit https://github.com/Leaflet/Leaflet.heat 
-        var heat = L.heatLayer(heatPointArray,
-              {radius: 25,
-              minOpacity: 0.4,
-              maxZoom: 19,
-              0: 'blue',
-              0.65: 'lime',
-              1: 'red'
-              }).addTo(this.heat_grp);
-  }
+  // makeHeatMap(map: L.map): void {
+  //       // Mother array wich will store as many array's as there are uptodate-events.
+  //       var heatPointArray = [];
+  //       this.events_grp.eachLayer(function(layer){
+  //         layer.eachLayer(function(layer1){
+  //           //console.log(layer1.feature.geometry.coordinates);
+  //           heatPointArray.push(layer1.feature.geometry.coordinates); //.feature.properties.dates;
+  //         })
+  //       });
+  //       console.log(heatPointArray);        
+  //       // Creating the actuall heatmap using the L.heatLayer function and adding it to a Layer Group. 
+  //       // Data intake should be of format: [[lon,lat,intesity][lon,lat,intesity][..]]
+  //       // styling of the heatmap gradient can be done after the coordinates. For help visit https://github.com/Leaflet/Leaflet.heat 
+  //       this.heat = L.heatLayer(heatPointArray,
+  //             {radius: 25,
+  //             minOpacity: 0.4,
+  //             maxZoom: 19,
+  //             0: 'blue',
+  //             0.65: 'lime',
+  //             1: 'red'
+  //             }).addTo(this.heat_grp);
+  //       //this.isRunning = false;
+  // }
   
   makeEventMarkers(map: L.map): void {
       const popupOptions = {
@@ -162,22 +143,53 @@ export class MarkerService {
           }
         });
         console.log("ThisEvent");
-        console.log(this.events_grp._layers)//.[120].feature.properties.dates
+        var testLayerGroup = L.layerGroup();
+        this.events_grp.eachLayer(function(layer){
+          layer.eachLayer(function(layer1){
+            testLayerGroup.addLayer(layer1); //.feature.properties.dates;
+            
+          })
+        });
+
+        //.[120].feature.properties.dates
         //console.log(L.geoJson(this.events_grp));
         setTimeout(() => { var sliderControl = L.control.sliderControl({
           position: "topright",
-          layer: this.events_grp,//L.geoJson(this.events_grp),
+          layer: testLayerGroup,
           range: true,
           alwaysShowDate : true,
           showAllOnStart: true,
-          timeAttribute: 'eventDate.from',
-          startTimeIdx: 14,    // where to start looking for a timestring
-          timeStrLength: 24,
+          timeAttribute: 'dates',
+          startTimeIdx: 13,    // where to start looking for a timestring
+          timeStrLength: -5,
+          });
+          
+          
+          //Make sure to add the slider to the map ;-)
+          map.addControl(sliderControl);
+          //And initialize the slider
+          sliderControl.startSlider();
+          
+        }, 1);
+        var heatPointArray = [];
+        this.events_grp.eachLayer(function(layer){
+          layer.eachLayer(function(layer1){
+            //console.log(layer1.feature.geometry.coordinates);
+            heatPointArray.push([layer1.feature.geometry.coordinates[1],layer1.feature.geometry.coordinates[0]]); //.feature.properties.dates;
+          })
         });
-        //Make sure to add the slider to the map ;-)
-        map.addControl(sliderControl);
-        //And initialize the slider
-        sliderControl.startSlider();}, 1);
+        console.log(heatPointArray);        
+        // Creating the actuall heatmap using the L.heatLayer function and adding it to a Layer Group. 
+        // Data intake should be of format: [[lon,lat,intesity][lon,lat,intesity][..]]
+        // styling of the heatmap gradient can be done after the coordinates. For help visit https://github.com/Leaflet/Leaflet.heat 
+        var heat = L.heatLayer(heatPointArray,
+              {radius: 25,
+              minOpacity: 0.4,
+              maxZoom: 19,
+              0: 'blue',
+              0.65: 'lime',
+              1: 'red'
+              }).addTo(this.heat_grp);
 
         // Adding the Search to the Map 
         map.addControl(search);
