@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('musicmap-leaflet app is running!');
+    expect(page.getTitleText()).toEqual('musicmap_v2 app is running!');
   });
 
   afterEach(async () => {
